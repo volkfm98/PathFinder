@@ -63,13 +63,13 @@ class RoadControl:
         leftAlarm = False
         rightAlarm = False
 
-        for i in range(0, self.vec1[2]):
-            if (filtered_img[self.centre[1] + self.vec1[1] * i][self.centre[0] + self.vec1[0] * i]  == 255):
-                leftAlarm = True
+#        for i in range(0, self.vec1[2]):
+#            if (filtered_img[self.centre[1] + self.vec1[1] * i][self.centre[0] + self.vec1[0] * i]  == 255):
+#                leftAlarm = True
 
-        for i in range(0, self.vec2[2]):
-            if (filtered_img[self.centre[1] + self.vec2[1] * i][self.centre[0] + self.vec2[0] * i] == 255):
-                rightAlarm = True
+#        for i in range(0, self.vec2[2]):
+#            if (filtered_img[self.centre[1] + self.vec2[1] * i][self.centre[0] + self.vec2[0] * i] == 255):
+#                rightAlarm = True
 
         alarm = 0
 

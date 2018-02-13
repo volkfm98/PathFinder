@@ -5,7 +5,7 @@ config:
   config:
     activation: relu
     activity_regularizer: null
-    batch_input_shape: !!python/tuple [null, 16, 48, 3]
+    batch_input_shape: !!python/tuple [null, 48, 16, 3]
     bias_constraint: null
     bias_initializer:
       class_name: Zeros
@@ -14,14 +14,14 @@ config:
     data_format: channels_last
     dilation_rate: &id001 !!python/tuple [1, 1]
     dtype: float32
-    filters: 32
+    filters: 20
     kernel_constraint: null
     kernel_initializer:
       class_name: VarianceScaling
       config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
     kernel_regularizer: null
     kernel_size: !!python/tuple [3, 3]
-    name: conv2d_9
+    name: conv2d_7
     padding: valid
     strides: &id002 !!python/tuple [1, 1]
     trainable: true
@@ -37,14 +37,14 @@ config:
     bias_regularizer: null
     data_format: channels_last
     dilation_rate: *id001
-    filters: 64
+    filters: 40
     kernel_constraint: null
     kernel_initializer:
       class_name: VarianceScaling
       config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
     kernel_regularizer: null
     kernel_size: !!python/tuple [3, 3]
-    name: conv2d_10
+    name: conv2d_8
     padding: valid
     strides: *id002
     trainable: true
@@ -52,15 +52,38 @@ config:
 - class_name: MaxPooling2D
   config:
     data_format: channels_last
-    name: max_pooling2d_5
+    name: max_pooling2d_3
     padding: valid
     pool_size: &id003 !!python/tuple [2, 2]
     strides: *id003
     trainable: true
 - class_name: Dropout
-  config: {name: dropout_9, noise_shape: null, rate: 0.25, seed: null, trainable: true}
+  config: {name: dropout_5, noise_shape: null, rate: 0.2, seed: null, trainable: true}
+- class_name: Conv2D
+  config:
+    activation: relu
+    activity_regularizer: null
+    bias_constraint: null
+    bias_initializer:
+      class_name: Zeros
+      config: {}
+    bias_regularizer: null
+    data_format: channels_last
+    dilation_rate: *id001
+    filters: 60
+    kernel_constraint: null
+    kernel_initializer:
+      class_name: VarianceScaling
+      config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+    kernel_regularizer: null
+    kernel_size: !!python/tuple [3, 3]
+    name: conv2d_9
+    padding: valid
+    strides: *id002
+    trainable: true
+    use_bias: true
 - class_name: Flatten
-  config: {name: flatten_5, trainable: true}
+  config: {name: flatten_3, trainable: true}
 - class_name: Dense
   config:
     activation: relu
@@ -75,12 +98,12 @@ config:
       class_name: VarianceScaling
       config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
     kernel_regularizer: null
-    name: dense_9
+    name: dense_5
     trainable: true
-    units: 128
+    units: 200
     use_bias: true
 - class_name: Dropout
-  config: {name: dropout_10, noise_shape: null, rate: 0.5, seed: null, trainable: true}
+  config: {name: dropout_6, noise_shape: null, rate: 0.4, seed: null, trainable: true}
 - class_name: Dense
   config:
     activation: sigmoid
@@ -95,7 +118,7 @@ config:
       class_name: VarianceScaling
       config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
     kernel_regularizer: null
-    name: dense_10
+    name: dense_6
     trainable: true
     units: 1
     use_bias: true
