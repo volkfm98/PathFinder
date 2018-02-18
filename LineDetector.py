@@ -27,19 +27,19 @@ class RoadControl:
 
     def filterImg(self):
         img = self.img.copy()[-self.img_road_area_height:]
-        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gaussian_blur_img = cv2.GaussianBlur(gray_img, (3, 3), 0)
-        median_blur_img = cv2.medianBlur(gaussian_blur_img, 3)
-        canny_img = cv2.Canny(median_blur_img, 100, 200)
+        canny_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        #gaussian_blur_img = cv2.GaussianBlur(gray_img, (3, 3), 0)
+        canny_img = cv2.medianBlur(canny_img, 5)
+        canny_img = cv2.Canny(canny_img, 260, 360)
         
         lines_img = canny_img.copy() #np.zeros(treshold_img.shape)
 
-        lines = cv2.HoughLinesP(canny_img, 1, np.pi / 360, 50, minLineLength = 20, maxLineGap = 180)
+        lines = cv2.HoughLinesP(canny_img, 1, np.pi / 180, 50, minLineLength = 30, maxLineGap = 20)
 
         if (type(lines) != type(None)):
             for coords in lines:
                 if ((coords[0][1] > coords[0][3] + 85) or (coords[0][3] > coords[0][1] + 85)):
-                    cv2.line(lines_img, (coords[0][0], coords[0][1]), (coords[0][2], coords[0][3]), 255, thickness = 3)
+                    cv2.line(lines_img, (coords[0][0], coords[0][1]), (coords[0][2], coords[0][3]), 255, thickness = 2)
                     #for DBG purposes only.
                     if (self.visualize == True):
                         cv2.line(img, 
@@ -94,8 +94,5 @@ class RoadControl:
         if (rightAlarm == True):
             alarm += 1
 
-#        if (self.visualize == True):
-            #cv2.imshow('filtered_img', filtered_img)
-            #cv2.imshow('primal', self.img)
 
         return alarm
