@@ -10,15 +10,20 @@ class RoadControl:
 
     img_road_area_height = 170
 
-    def __init__(self, img, ROI_height, viz):
+    def __init__(self, img, ROI_height, vectors ,viz):
         self.img_road_area_height = ROI_height
         self.visualize = viz
         self.img = img
         
         self.centre = (int(self.img.shape[1] / 2), int(self.img_road_area_height / 2))
 
-        self.vec1 = [-1, -0.5, 180]
-        self.vec2 = [1, -0.5, 180]
+        for vec in vectors:
+            vec[2] *= abs(vec[0])
+            vec[1] /= abs(vec[0])
+            vec[0] /= abs(vec[0])
+
+        self.vec1 = vectors[0]
+        self.vec2 = vectors[1]
 
     def filterImg(self):
         img = self.img.copy()[-self.img_road_area_height:]
@@ -94,15 +99,3 @@ class RoadControl:
             #cv2.imshow('primal', self.img)
 
         return alarm
-
-vid = cv2.VideoCapture('VIDEOS/left_black_line.avi')
-
-a = RoadControl(vid.read()[1], 200, True)
-
-while (True):
-    print(a.poke())
-   
-    a.img = vid.read()[1]
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
