@@ -10,15 +10,20 @@ class RoadControl:
 
     img_road_area_height = 170
 
-    def __init__(self, img, ROI_height, viz):
+    def __init__(self, img, ROI_height, vectors ,viz):
         self.img_road_area_height = ROI_height
         self.visualize = viz
         self.img = img
         
         self.centre = (int(self.img.shape[1] / 2), int(self.img_road_area_height / 2))
 
-        self.vec1 = [-2, -1, 90]
-        self.vec2 = [2, -1, 90]
+        for vec in vectors:
+            vec[2] *= abs(vec[0])
+            vec[1] /= abs(vec[0])
+            vec[0] /= abs(vec[0])
+
+        self.vec1 = vectors[0]
+        self.vec2 = vectors[1]
 
     def filterImg(self):
         img = self.img.copy()[-self.img_road_area_height:]
@@ -33,7 +38,7 @@ class RoadControl:
 
         if (type(lines) != type(None)):
             for coords in lines:
-                if(coords[0][1] > coords[0][3] + 85):
+                if ((coords[0][1] > coords[0][3] + 85) or (coords[0][3] > coords[0][1] + 85)):
                     cv2.line(lines_img, (coords[0][0], coords[0][1]), (coords[0][2], coords[0][3]), 255, thickness = 3)
                     #for DBG purposes only.
                     if (self.visualize == True):
@@ -43,17 +48,18 @@ class RoadControl:
                             (0, 255, 0), thickness = 3)
         
         if (self.visualize == True):
-            cv2.line(img, (self.centre[0], img.shape[0] - self.centre[1]),
-                (self.centre[0] + self.vec1[0] * self.vec1[2], img.shape[0] - self.centre[1] + self.vec1[1] * self.vec1[2]),
+            cv2.line(img, (int(self.centre[0]), int(img.shape[0] - self.centre[1])),
+                (int(self.centre[0] + self.vec1[0] * self.vec1[2]), int(img.shape[0] - self.centre[1] + self.vec1[1] * self.vec1[2])),
                 (255, 0, 0), thickness = 3)
             
-            cv2.line(img, (self.centre[0], img.shape[0] - self.centre[1]),
-                (self.centre[0] + self.vec2[0] * self.vec2[2], img.shape[0] - self.centre[1] + self.vec2[1] * self.vec2[2]), 
+            cv2.line(img, (int(self.centre[0]), int(img.shape[0] - self.centre[1])),
+                (int(self.centre[0] + self.vec2[0] * self.vec2[2]), int(img.shape[0] - self.centre[1] + self.vec2[1] * self.vec2[2])), 
                 (0, 0, 255), thickness = 3)
 
         if (self.visualize == True):
             cv2.imshow("canny", canny_img)
             cv2.imshow("triggers", img)
+            cv2.moveWindow("canny", 640, 0)
 
         return lines_img
 
@@ -63,13 +69,22 @@ class RoadControl:
         leftAlarm = False
         rightAlarm = False
 
-#        for i in range(0, self.vec1[2]):
-#            if (filtered_img[self.centre[1] + self.vec1[1] * i][self.centre[0] + self.vec1[0] * i]  == 255):
-#                leftAlarm = True
+        x = 0
+        y = 0
 
-#        for i in range(0, self.vec2[2]):
-#            if (filtered_img[self.centre[1] + self.vec2[1] * i][self.centre[0] + self.vec2[0] * i] == 255):
-#                rightAlarm = True
+        for i in range(0, self.vec1[2]):
+            y = int(self.centre[1] + self.vec1[1] * i)
+            x = int(self.centre[0] + self.vec1[0] * i)
+            
+            if x < filtered_img.shape[1] and x >= 0 and y < filtered_img.shape[0] and y >= 0 and filtered_img[y][x] == 255:
+                leftAlarm = True
+
+        for i in range(0, self.vec2[2]):
+            y = int(self.centre[1] + self.vec2[1] * i)
+            x = int(self.centre[0] + self.vec2[0] * i)
+
+            if x < filtered_img.shape[1] and x >= 0 and y < filtered_img.shape[0] and y >= 0 and filtered_img[y][x] == 255:
+                rightAlarm = True
 
         alarm = 0
 
