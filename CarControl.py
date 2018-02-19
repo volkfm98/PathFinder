@@ -20,15 +20,3 @@ class CarControl:
 
     def __del__(self):
         self.ser.close()
-
-a = CarControl("/dev/ttyUSB0")
-
-#for i in range(0, 0):
-a.move(1, 200)
-time.sleep(5)
-a.move(0, 0)
-time.sleep(3)
-a.turn(50)
-a.move(2, 70)
-time.sleep(3)
-a.ser.close()
