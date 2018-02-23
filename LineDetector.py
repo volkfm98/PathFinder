@@ -72,12 +72,21 @@ class RoadControl:
         x = 0
         y = 0
 
+        dist = []
+
         for i in range(0, self.vec1[2]):
             y = int(self.centre[1] + self.vec1[1] * i)
             x = int(self.centre[0] + self.vec1[0] * i)
             
             if x < filtered_img.shape[1] and x >= 0 and y < filtered_img.shape[0] and y >= 0 and filtered_img[y][x] == 255:
                 leftAlarm = True
+                
+                dist.append(i / self.vec1[2] * 100)
+
+                break
+
+        if not leftAlarm:
+            dist.append(None)
 
         for i in range(0, self.vec2[2]):
             y = int(self.centre[1] + self.vec2[1] * i)
@@ -85,14 +94,12 @@ class RoadControl:
 
             if x < filtered_img.shape[1] and x >= 0 and y < filtered_img.shape[0] and y >= 0 and filtered_img[y][x] == 255:
                 rightAlarm = True
+                
+                dist.append(i / self.vec2[2] * 100)
 
-        alarm = 0
+                break
+        
+        if not rightAlarm:
+            dist.append(None)
 
-        if (leftAlarm == True):
-            alarm += 2
-
-        if (rightAlarm == True):
-            alarm += 1
-
-
-        return alarm
+        return dist
